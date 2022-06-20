@@ -2,7 +2,7 @@ const express = require("express");
 const router  = express.Router()
 const Customer = require('../Models/customers')
 
-// Get all: 
+// Get all Notes: 
 router.get('/', async(req, res) => {
   try {
     const customers = await Customer.find({})
@@ -13,7 +13,7 @@ router.get('/', async(req, res) => {
 })
 
 
-// Get One: 
+// Get by Id
 router.get('/:id', async(req,res) => {
   // let id = req.params.id;
   try {
@@ -25,7 +25,7 @@ router.get('/:id', async(req,res) => {
   
 })
 
-//Creating One 
+//Creating new Note
 router.post('/', async(req,res) => {
   const customer  = new Customer({
     name: req.body.name,
