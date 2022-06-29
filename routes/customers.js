@@ -29,7 +29,9 @@ router.get('/:id', async(req,res) => {
 router.post('/', async(req,res) => {
   const customer  = new Customer({
     name: req.body.name,
-    noteCreated: req.body.noteCreated
+    noteCreated: req.body.noteCreated,
+    tag: req.body.tag,
+    noteDate: req.body.noteDate
 
   }) 
   try {
@@ -54,6 +56,16 @@ router.delete('/:id', async (req,res) => {
   
 })
 
+// Delete all
+router.delete('/', async (req,res) => {
+  try {
+    await Customer.remove()
+    res.json({ message: 'Deleted Customer' })
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+  
+})
 
 
 module.exports = router

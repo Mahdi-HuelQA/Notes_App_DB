@@ -9,12 +9,15 @@ const customersSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  // _id: { type: String }
-  // noteDate: {
-  //   type: Date,
-  //   required: true,
-  //   default: Date.now
-  // }
+  tag: {
+    type: String,
+    required: true
+  },
+  noteDate: {
+    type: Date,
+    required: true,
+    default: Date.now
+  }
 })
 
 module.exports = mongoose.model('customers', customersSchema)
