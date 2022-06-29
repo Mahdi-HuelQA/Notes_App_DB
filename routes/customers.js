@@ -42,15 +42,11 @@ router.post('/', async(req,res) => {
   
 })
 
-// Updating One 
-router.patch('/:id', getCustomer,(req,res) => {
-  
-})
 
 // Deleting One 
 router.delete('/:id', async (req,res) => {
   try {
-    await res.customer.remove()
+    await Customer.remove({_id: req.params.id})
     res.json({ message: 'Deleted Customer' })
   } catch (err) {
     res.status(500).json({ message: err.message })
@@ -58,19 +54,6 @@ router.delete('/:id', async (req,res) => {
   
 })
 
-async function getCustomer(req, res, next) {
-  let cust
-  try {
-    customer = await Customer.findById(req.params.id)
-    if (customer == null) {
-      return res.status(404).json({ message: 'Cannot find subscriber' })
-    }
-  } catch (err) {
-    return res.status(500).json({ message: err.message })
-  }
 
-  res.customer = customer
-  next()
-}
 
 module.exports = router
