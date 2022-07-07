@@ -27,13 +27,19 @@ router.get('/:id', async(req,res) => {
 
 //Creating new Note
 router.post('/', async(req,res) => {
+  console.log('here post');
+  console.log(req.body)
   const customer  = new Customer({
     name: req.body.name,
     noteCreated: req.body.noteCreated,
     tag: req.body.tag,
-    noteDate: req.body.noteDate
+    noteDate: req.body.noteDate,
+    email: req.body.email,
+    media: req.body.media
+
 
   }) 
+
   try {
     const newCustomer = await customer.save()
     res.status(201).json(newCustomer)

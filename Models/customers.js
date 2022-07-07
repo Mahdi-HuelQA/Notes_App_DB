@@ -1,8 +1,5 @@
 const mongoose = require('mongoose');
-const { DateTime } = require("luxon");
-
-
-
+const { DateTime } = require('luxon');
 
 const customersSchema = new mongoose.Schema({
   name: {
@@ -17,11 +14,18 @@ const customersSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
+  email: {
+    type: String,
+    required: true,
+  },
+  media: {
+    type: String,
+    required: true,
+  },
   noteDate: {
     type: String,
     required: true,
-    default: DateTime.now().toLocaleString()
+    default: DateTime.now().toLocaleString(),
   },
 });
 
