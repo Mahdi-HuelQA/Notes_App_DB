@@ -1,14 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const Joi = require('joi');
-const Customer = require('../Models/customers');
+
+// const Customer = require('../Model/customer');
 // const customersSchema = require('../Models/customers')
 const { DateTime } = require('luxon');
 
-// Get all Notes:
+const { getDb} = require('../libs/db')
+const  { getCustomers, getCustomer, save, deleteOne } = require("../repositories/customer-repository")
+
+const { validate } = require('../libs/customers/validator.js')
+
+// db connection
+let db = getDb()
+
+
+
+// Get all Notes: Refactored
 router.get('/', async (req, res) => {
   try {
-    const customers = await Customer.find({});
+    const customers = await getCustomers()
     res.send(customers);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -19,7 +29,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   // let id = req.params.id;
   try {
-    const customers = await Customer.findById({ _id: req.params.id });
+    const customers = await getCustomer(req.params.id);
     res.send(customers);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -30,38 +40,24 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   console.log('here post');
 
-  const customersSchema = Joi.object().keys({
-    name: Joi.string().trim().required(),
-    noteCreated: Joi.string().trim().required(),
-    tag: Joi.string().trim().required(),
-    email: Joi.string().trim().email().required(),
-    media: Joi.string().trim(),
-  });
-  const customer = new Customer({
-    name: req.body.name,
-    noteCreated: req.body.noteCreated,
-    tag: req.body.tag,
-    noteDate: req.body.noteDate,
-    email: req.body.email,
-    media: req.body.media,
-    noteDate: (req.body.newDate = DateTime.now().toLocaleString()),
-  });
-  const validation = customersSchema.validate(req.body);
-  if (validation?.error) {
-    console.log('validated!');
+  try {
+    const customer = await validate(req.body)
 
-    const newCustomer = await customer.save();
-    res.status(201).json(newCustomer);
-  } else {
-    console.log('failed');
-    res.status(400).json({ message: validation.error });
+    customer.noteDate = (req.body.newDate = DateTime.now().toLocaleString())
+
+    await save(customer)
+
+    res.status(201).json(customer);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json(error);
   }
 });
 
 // Deleting One
 router.delete('/:id', async (req, res) => {
   try {
-    await Customer.remove({ _id: req.params.id });
+    await deleteOne( req.params.id );
     res.json({ message: 'Deleted Customer' });
   } catch (err) {
     res.status(500).json({ message: err.message });
